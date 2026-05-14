@@ -20,13 +20,17 @@ local function parse_modules_from_settings(settings_path)
   local lines = vim.fn.readfile(settings_path)
   local modules = {}
   for _, line in ipairs(lines) do
+    -- Only inspect include statements to avoid matching module names in
+    -- project(':mod').projectDir = new File('mod') and similar declarations.
     -- Groovy:  include ':app', ':core'  or  include ':app'
     -- Kotlin:  include(":app")          or  include(":app", ":core")
-    for mod in line:gmatch '["\'](:?[%w_%-]+)["\']' do
-      -- Accept :app or app style
-      local name = mod:match '^:?(.+)$'
-      if name then
-        table.insert(modules, name)
+    if line:match '^%s*include' then
+      -- Allow colons inside the name to support nested modules (:core:common)
+      for mod in line:gmatch '["\'](:?[%w_%-:]+)["\']' do
+        local name = mod:match '^:?(.+)$'
+        if name then
+          table.insert(modules, name)
+        end
       end
     end
   end
