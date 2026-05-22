@@ -200,7 +200,7 @@ function M.scan_gradle_scripts(root, modules, gradle_cat_node)
   for _, fname in ipairs(GRADLE_FILES) do
     local path = root .. '/' .. fname
     if vim.fn.filereadable(path) == 1 then
-      local label = '(' .. project_name .. ') ' .. fname
+      local label = '(Project) ' .. fname
       tree.add_child(gradle_cat_node, tree.make_node(NT.FILE, label, path))
     end
   end
