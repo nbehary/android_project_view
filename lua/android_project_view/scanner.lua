@@ -200,7 +200,7 @@ function M.scan_gradle_scripts(root, modules, gradle_cat_node)
   for _, fname in ipairs(GRADLE_FILES) do
     local path = root .. '/' .. fname
     if vim.fn.filereadable(path) == 1 then
-      local label = '(Project: ' .. project_name .. ') ' .. fname
+      local label = '(' .. project_name .. ') ' .. fname
       tree.add_child(gradle_cat_node, tree.make_node(NT.FILE, label, path))
     end
   end
@@ -223,21 +223,12 @@ function M.scan_gradle_scripts(root, modules, gradle_cat_node)
       local path = mod.dir .. '/' .. fname
       if vim.fn.filereadable(path) == 1 then
         if not fname:match('%-rules') then
-          local label = '(Module: ' .. mod.name .. ') ' .. fname
+          local label = '(' .. mod.name .. ') ' .. fname
           tree.add_child(gradle_cat_node, tree.make_node(NT.FILE, label, path))
         end
       end
     end
-    -- Proguard / other common module files
-    for _, fname in ipairs { 'proguard-rules.pro', 'consumer-rules.pro' } do
-      local path = mod.dir .. '/' .. fname
-      if vim.fn.filereadable(path) == 1 then
-        if not fname:match('%-rules') then
-          local label = '(Module: ' .. mod.name .. ') ' .. fname
-          tree.add_child(gradle_cat_node, tree.make_node(NT.FILE, label, path))
-        end
-      end
-    end
+
   end
 end
 
